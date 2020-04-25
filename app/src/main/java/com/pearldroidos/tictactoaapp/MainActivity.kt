@@ -1,6 +1,5 @@
 package com.pearldroidos.tictactoaapp
 
-import android.graphics.Color.blue
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -13,14 +12,18 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
+    private var activePlayer = 1
+    private var playerOneWinCounts = 0
+    private var playerTwoWinCounts = 0
+    private var playerOne = ArrayList<Int>()
+    private var playerTwo = ArrayList<Int>()
+    private var notWin = true
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
     }
-
 
     fun btnClick(view: View?) {
         val btnSelected = view as Button
@@ -44,14 +47,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    var activePlayer = 1
-    var notWin = true
-
-    var playerOne = ArrayList<Int>()
-    var playerTwo = ArrayList<Int>()
 
     private fun playGame(cellId: Int, btnSelected: Button) {
-
         if (activePlayer == 1) {
             btnSelected.text = "x"
             btnSelected.setBackgroundResource(R.color.colorOrange)
@@ -132,42 +129,43 @@ class MainActivity : AppCompatActivity() {
             winner = 2
         }
 
-
-        val handler = Handler()
-
-        if (winner == 1) {
-            Toast.makeText(this, "Player 1 wins the game", Toast.LENGTH_SHORT).show()
-            notWin = false
-            playerOneWinCounts += 1
-            txtPlayerOne.text = playerOneWinCounts.toString()
-            handler.postDelayed({
-                Toast.makeText(this, "New Game !!!", Toast.LENGTH_SHORT).show()
-                restartGame()
-            }, 1500)
-        } else if (winner == 2) {
-            Toast.makeText(this, "Player 2 wins the game", Toast.LENGTH_SHORT).show()
-            notWin = false
-            playerTwoWinCounts += 1
-            txtPlayerTwo.text = playerTwoWinCounts.toString()
-            handler.postDelayed({
-                Toast.makeText(this, "New Game !!!", Toast.LENGTH_SHORT).show()
-                restartGame()
-            }, 1500)
-        } else if (playerOne.size + playerTwo.size == 9) {
-            notWin = false
-            Toast.makeText(this, "Player 1 draws Player 2 in the game", Toast.LENGTH_SHORT)
-                .show()
-            handler.postDelayed({
-                Toast.makeText(this, "New Game !!!", Toast.LENGTH_SHORT).show()
-                restartGame()
-            }, 1500)
+        when {
+            winner == 1 -> {
+                Toast.makeText(this, "Player 1 wins the game", Toast.LENGTH_SHORT).show()
+                notWin = false
+                playerOneWinCounts += 1
+                txtPlayerOne.text = playerOneWinCounts.toString()
+                handler.postDelayed({
+                    Toast.makeText(this, "New Game !!!", Toast.LENGTH_SHORT).show()
+                    restartGame()
+                }, 1500)
+            }
+            winner == 2 -> {
+                Toast.makeText(this, "Player 2 wins the game", Toast.LENGTH_SHORT).show()
+                notWin = false
+                playerTwoWinCounts += 1
+                txtPlayerTwo.text = playerTwoWinCounts.toString()
+                handler.postDelayed({
+                    Toast.makeText(this, "New Game !!!", Toast.LENGTH_SHORT).show()
+                    restartGame()
+                }, 1500)
+            }
+            playerOne.size + playerTwo.size == 9 -> {
+                notWin = false
+                Toast.makeText(this, "Player 1 draws Player 2 in the game", Toast.LENGTH_SHORT)
+                    .show()
+                handler.postDelayed({
+                    Toast.makeText(this, "New Game !!!", Toast.LENGTH_SHORT).show()
+                    restartGame()
+                }, 1500)
+            }
         }
 
     }
 
 
     private fun autoPlay() {
-        var emptyCells = ArrayList<Int>()
+        val emptyCells = ArrayList<Int>()
 
         for (cellID in 1..9) {
             if (!(playerOne.contains(cellID) || playerTwo.contains(cellID))) {
@@ -198,12 +196,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         playGame(cellId, btnSelected)
-
     }
-
-    var playerOneWinCounts = 0
-    var playerTwoWinCounts = 0
-
 
     private fun restartGame() {
         activePlayer = 1
@@ -228,8 +221,5 @@ class MainActivity : AppCompatActivity() {
             btnSelected.isEnabled = true
             btnSelected.setBackgroundResource(R.color.colorWhileBtn)
         }
-
     }
-
-
 }
