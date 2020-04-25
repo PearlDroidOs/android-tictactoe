@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TicTacToaApp</string>
+    <string name="zero">0</string>
+    <string name="vs">VS</string>
+    <string name="player_two">Player Two</string>
+    <string name="player_one">Player One</string>
+</resources>
